@@ -5,15 +5,15 @@ download.file(fileurl, destfile = "./data/UCIMLDataset.zip")
 #Unzip file into a local directory
 unzip(zipfile = "./data/UCIMLDataset.zip",exdir = "./data") 
 # Read test & train datasets into R
-x_test <- read.delim(".data/UCI HAR Dataset/test/X_test.txt", sep = "", header = FALSE)
-y_test <- read.delim(".data/UCI HAR Dataset/test/y_test.txt", sep = "", header = FALSE)
-subject_test <- read.delim(".data/UCI HAR Dataset/test/subject_test.txt", sep = "", header = FALSE)
-x_train <- read.delim(".data/UCI HAR Dataset/train/X_train.txt", sep = "", header = FALSE)
-y_train <- read.delim(".data/UCI HAR Dataset/train/y_train.txt", sep = "", header = FALSE)
-subject_train <- read.delim(".data/UCI HAR Dataset/train/subject_train.txt", sep = "", header = FALSE)
+x_test <- read.delim("./data/UCI HAR Dataset/test/X_test.txt", sep = "", header = FALSE)
+y_test <- read.delim("./data/UCI HAR Dataset/test/y_test.txt", sep = "", header = FALSE)
+subject_test <- read.delim("./data/UCI HAR Dataset/test/subject_test.txt", sep = "", header = FALSE)
+x_train <- read.delim("./data/UCI HAR Dataset/train/X_train.txt", sep = "", header = FALSE)
+y_train <- read.delim("./data/UCI HAR Dataset/train/y_train.txt", sep = "", header = FALSE)
+subject_train <- read.delim("./data/UCI HAR Dataset/train/subject_train.txt", sep = "", header = FALSE)
 # Read features and activity labels into R to define column names
-features <- read.delim(".data/UCI HAR Dataset/features.txt", sep = "", header = FALSE)
-activity_labels <- read.delim(".data/UCI HAR Dataset/activity_labels.txt", sep = "", header = FALSE)
+features <- read.delim("./data/UCI HAR Dataset/features.txt", sep = "", header = FALSE)
+activity_labels <- read.delim("./data/UCI HAR Dataset/activity_labels.txt", sep = "", header = FALSE)
 names(activity_labels) <- c("activity_id","activity_name")
 #merge activity and corresponding dataset
 combined_trainset <- cbind(subject_train,y_train,x_train)
@@ -31,4 +31,5 @@ meanstdset <- merge(meanstdset,activity_labels,by = "activity_id", all = TRUE)
 library(dplyr)
 meanstdset <- meanstdset %>% select(subject_id,activity_name,3:563) #Re-Ordering set and removing activityID variable
 library(tidyr)
-
+#Group the data by Subject and Activity, further create a tidy dataset with average of each variable for each of the subject and activity
+summarized_set <- meanstdset %>% group_by(subject_id,activity_name) %>% summarize_all(mean)
