@@ -25,11 +25,11 @@ names(combined_testset) <- c("subject_id","activity_id",as.character(features$V2
 combined_set <- rbind(combined_trainset,combined_testset)
 #extract column names of combined set to subset mean and std dev values
 columnnames <- names(combined_set)
-feature_meansd <- grep("mean\\()|std\\()",columnnames)
-meanstdset <- combined_set[,1&2&feature_meansd]
-meanstdset <- merge(meanstdset,activity_labels,by = "activity_id", all = TRUE)
+feature_meansd <- grep("subject_id|activity_id|mean\\()|std\\()",columnnames)
 library(dplyr)
-meanstdset <- meanstdset %>% select(subject_id,activity_name,3:563) #Re-Ordering set and removing activityID variable
+meanstdset <- combined_set[,feature_meansd]
+meanstdset <- merge(meanstdset,activity_labels,by = "activity_id", all = TRUE)
+meanstdset <- meanstdset %>% select(subject_id,activity_name,3:69) #Re-Ordering set and removing activityID variable
 library(tidyr)
 #Group the data by Subject and Activity, further create a tidy dataset with average of each variable for each of the subject and activity
 summarized_set <- meanstdset %>% group_by(subject_id,activity_name) %>% summarize_all(mean)
