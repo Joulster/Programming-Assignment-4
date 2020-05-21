@@ -33,3 +33,4 @@ meanstdset <- meanstdset %>% select(subject_id,activity_name,3:69) #Re-Ordering 
 library(tidyr)
 #Group the data by Subject and Activity, further create a tidy dataset with average of each variable for each of the subject and activity
 summarized_set <- meanstdset %>% group_by(subject_id,activity_name) %>% summarize_all(mean)
+write.table(summarized_set,"tidyset.txt",row.names = FALSE)
