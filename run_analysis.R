@@ -29,7 +29,14 @@ feature_meansd <- grep("subject_id|activity_id|mean\\()|std\\()",columnnames)
 library(dplyr)
 meanstdset <- combined_set[,feature_meansd]
 meanstdset <- merge(meanstdset,activity_labels,by = "activity_id", all = TRUE)
-meanstdset <- meanstdset %>% select(subject_id,activity_name,3:69) #Re-Ordering set and removing activityID variable
+meanstdset <- meanstdset %>% select(-activity_id) %>% select(subject_id,activity_name,everything()) #Re-Ordering set and removing activityID variable
+
+#renaming variables with descriptive values
+names(meanstdset) <- gsub("^t","time",names(meanstdset))
+names(meanstdset) <- gsub("^f","frequency",names(meanstdset))
+names(meanstdset) <- gsub("Acc","Acceleration",names(meanstdset))
+names(meanstdset) <- gsub("Gyro","Gyroscope",names(meanstdset))
+names(meanstdset) <- gsub("Mag","Magnitude",names(meanstdset))
 library(tidyr)
 #Group the data by Subject and Activity, further create a tidy dataset with average of each variable for each of the subject and activity
 summarized_set <- meanstdset %>% group_by(subject_id,activity_name) %>% summarize_all(mean)
